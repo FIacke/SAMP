@@ -46,43 +46,43 @@ end
 -- ===== ДОКЛАДЫ =====
 
 local function report1040LVa()
-    sampSendChat(processReport("/r Борт id. 10-40."))
+    sampSendChat(processReport("/r Борт id. Начинаю поставки ГС ЛВа 10-40."))
     sendDelayed(350, function()
         sendCarmAndPickFirst()
     end)
 end
 
 local function report1040LS()
-    sampSendChat(processReport("/r Борт id. 10-40. Порт ЛС."))
+    sampSendChat(processReport("/r Борт id. 10-40. Начинаю поставки в Порт ЛС."))
     sendDelayed(350, function()
         sendCarmAndPickFirst()
     end)
 end
 
 local function report1041LVa()
-    sampSendChat(processReport("/r Борт id. 10-41. ЛВа."))
+    sampSendChat(processReport("/r Борт id. 10-41. Держу курс на ГС LVa."))
     sendDelayed(2000, function()
         sendCarmAndPickLast()
     end)
 end
 
 local function report1041LS()
-    sampSendChat(processReport("/r Борт id. 10-41. Порт ЛС."))
+    sampSendChat(processReport("/r Борт id. 10-41. Держу курс на Порт ЛС."))
     sendDelayed(2000, function()
         sendCarmAndPickLast()
     end)
 end
 
 local function report1042LVa()
-    sampSendChat(processReport("/r Борт id. 10-42. ЛВа tonn."))
+    sampSendChat(processReport("/r Борт id. 10-42. Разгрузился на ГС ЛВа Состояние: tonn."))
 end
 
 local function report1042LS()
-    sampSendChat(processReport("/r Борт id. 10-42. Порт ЛС " .. currentPortTonn .. "."))
+    sampSendChat(processReport("/r Борт id. 10-42. Разгрузился в Порту ЛС " .. currentPortTonn .. "."))
 end
 
 local function report1044()
-    sampSendChat(processReport("/r Борт id. 10-44."))
+    sampSendChat(processReport("/r Борт id. Завершаю поставки, держу курс на базу! 10-44."))
 end
 
 function main()
