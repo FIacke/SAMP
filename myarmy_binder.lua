@@ -162,13 +162,13 @@ function main()
             sampSendChat("Здравие желаю! Мл.Мичман Лупер.")
         end
         if isKeyDown(vkeys.VK_N) and isKeyJustPressed(vkeys.VK_2) then
-            sampSendChat("/do На форме отличительные знаки: Army SF || мл.мичман || SEAL || Loopere")
+            sampSendChat("/do На форме отличительные знаки: Army SF || мл.Мичман || SEAL || Loopere")
         end
         if isKeyDown(vkeys.VK_N) and isKeyJustPressed(vkeys.VK_4) then
             sampSendChat("Согласно конституции штата, статье 17-17.1 пункт 4, въезд на территорию строго по пропуску.")
         end
         if isKeyDown(vkeys.VK_N) and isKeyJustPressed(vkeys.VK_5) then
-            sampSendChat("Предъявите пожалуйста ваши документы.")
+            sampSendChat("Предъявите пожалуйста ваши документы в развёрнутом виде!")
         end
         if isKeyDown(vkeys.VK_N) and isKeyJustPressed(vkeys.VK_6) then
             sampSendChat("Всё в порядке, можете продолжать движение!")
