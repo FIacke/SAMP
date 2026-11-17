@@ -159,7 +159,7 @@ function main()
 
         -- БИНДЫ НА КЛАВИШУ N
         if isKeyDown(vkeys.VK_N) and isKeyJustPressed(vkeys.VK_1) then
-            sampSendChat("Здравие желаю! Мл.Мичман Лупер.")
+            sampSendChat("Здравие желаю! Мл.Мичман Фласки Лупер.")
         end
         if isKeyDown(vkeys.VK_N) and isKeyJustPressed(vkeys.VK_2) then
             sampSendChat("/do На форме отличительные знаки: Army SF || мл.Мичман || SEAL || Loopere")
