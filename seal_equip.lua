@@ -22,7 +22,7 @@ local function unequipSEAL()
     wait(800)
     sampSendChat("/me снял берет спецподразделения SEAL")
     wait(500)
-    sampSendChat("/do На форме отличительные знаки: Гражданский")
+    sampSendChat("/do Личночность скрыта! Опознавательных знаков нет!")
 end
 
 function main()
