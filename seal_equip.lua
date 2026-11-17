@@ -1,17 +1,11 @@
 local vkeys = require 'vkeys'
 local sampev = require 'samp.events'
-local imgui = require 'mimgui'
-local new = imgui.new
 local inicfg = require 'inicfg'
-local encoding = require 'encoding'
-
-encoding.default = 'CP1251'
-local u8 = encoding.UTF8
 
 local isProcessing = false
 local configFile = 'seal_equip.ini'
 
--- Настройки по умолчанию
+-- Настройки по умолчанию (Windows-1251)
 local config = inicfg.load({
     settings = {
         equipId = "32",
@@ -25,110 +19,75 @@ local config = inicfg.load({
     }
 }, configFile)
 
--- Переменные для меню ImGui
-local showMenu = new.bool(false)
-local bufEquipId = new.char[10](config.settings.equipId)
-local bufUnequipId = new.char[10](config.settings.unequipId)
-local bufHatCmd = new.char[64](config.settings.hatCmd)
-local bufEquipMe = new.char[128](config.settings.equipMe)
-local bufEquipDo1 = new.char[128](config.settings.equipDo1)
-local bufEquipDo2 = new.char[128](config.settings.equipDo2)
-local bufUnequipMe = new.char[128](config.settings.unequipMe)
-local bufUnequipDo = new.char[128](config.settings.unequipDo)
-
-local function updateConfig()
-    config.settings.equipId = imgui.String(bufEquipId)
-    config.settings.unequipId = imgui.String(bufUnequipId)
-    config.settings.hatCmd = imgui.String(bufHatCmd)
-    config.settings.equipMe = imgui.String(bufEquipMe)
-    config.settings.equipDo1 = imgui.String(bufEquipDo1)
-    config.settings.equipDo2 = imgui.String(bufEquipDo2)
-    config.settings.unequipMe = imgui.String(bufUnequipMe)
-    config.settings.unequipDo = imgui.String(bufUnequipDo)
+local function saveConfig()
     inicfg.save(config, configFile)
 end
 
--- Функция надевания формы SEAL (ИСПРАВЛЕНО: добавлен u8:decode)
+-- Функция надевания формы SEAL
 local function equipSEAL()
     sampSendChat("/clist " .. config.settings.equipId)
     wait(800)
     sampSendChat(config.settings.hatCmd)
     wait(500)
-    sampSendChat(u8:decode("/me " .. config.settings.equipMe))
+    sampSendChat("/me " .. config.settings.equipMe)
     wait(500)
-    sampSendChat(u8:decode("/do " .. config.settings.equipDo1))
+    sampSendChat("/do " .. config.settings.equipDo1)
     wait(500)
-    sampSendChat(u8:decode("/do " .. config.settings.equipDo2))
+    sampSendChat("/do " .. config.settings.equipDo2)
 end
 
--- Функция снятия формы (ИСПРАВЛЕНО: добавлен u8:decode)
+-- Функция снятия формы
 local function unequipSEAL()
     sampSendChat("/clist " .. config.settings.unequipId)
     wait(800)
-    sampSendChat(u8:decode("/me " .. config.settings.unequipMe))
+    sampSendChat("/me " .. config.settings.unequipMe)
     wait(500)
-    sampSendChat(u8:decode("/do " .. config.settings.unequipDo))
-end
-
--- Отрисовка меню
-local function renderMenu()
-    if showMenu[0] then
-        imgui.Begin("Настройки SEAL", showMenu)
-        
-        imgui.Text("Настройки команд:")
-        imgui.InputText("ID клиста (Надеть)", bufEquipId)
-        imgui.InputText("ID клиста (Снять)", bufUnequipId)
-        imgui.InputText("Команда берета", bufHatCmd)
-        imgui.Separator()
-        
-        imgui.Text("Тексты отыгровок (Надевание):")
-        imgui.InputText("me", bufEquipMe)
-        imgui.InputText("do 1", bufEquipDo1)
-        imgui.InputText("do 2", bufEquipDo2)
-        imgui.Separator()
-        
-        imgui.Text("Тексты отыгровок (Снятие):")
-        imgui.InputText("me", bufUnequipMe)
-        imgui.InputText("do", bufUnequipDo)
-        imgui.Separator()
-        
-        if imgui.Button("Сохранить и применить", new.ImVec2(200, 30)) then
-            updateConfig()
-            sampAddChatMessage(u8:decode("{2B87C8}[SEAL]{FFFFFF}: Настройки сохранены!"), -1)
-        end
-        
-        imgui.End()
-    end
-end
-
-function imgui.OnDrawFrame()
-    renderMenu()
+    sampSendChat("/do " .. config.settings.unequipDo)
 end
 
 function main()
     while not isSampAvailable() do wait(100) end
 
-    sampRegisterChatCommand("seal", function()
-        showMenu[0] = not showMenu[0]
+    -- Команды для настройки прямо в игре
+    sampRegisterChatCommand("seal_eqid", function(arg)
+        if arg ~= "" then config.settings.equipId = arg; saveConfig(); sampAddChatMessage("[SEAL] ID клиста (надеть) изменен на "..arg, -1) end
+    end)
+    sampRegisterChatCommand("seal_unid", function(arg)
+        if arg ~= "" then config.settings.unequipId = arg; saveConfig(); sampAddChatMessage("[SEAL] ID клиста (снять) изменен на "..arg, -1) end
+    end)
+    sampRegisterChatCommand("seal_hat", function(arg)
+        if arg ~= "" then config.settings.hatCmd = arg; saveConfig(); sampAddChatMessage("[SEAL] Команда берета изменена", -1) end
+    end)
+    sampRegisterChatCommand("seal_eqme", function(arg)
+        if arg ~= "" then config.settings.equipMe = arg; saveConfig(); sampAddChatMessage("[SEAL] /me (надевание) изменено", -1) end
+    end)
+    sampRegisterChatCommand("seal_eqdo1", function(arg)
+        if arg ~= "" then config.settings.equipDo1 = arg; saveConfig(); sampAddChatMessage("[SEAL] /do 1 (надевание) изменено", -1) end
+    end)
+    sampRegisterChatCommand("seal_eqdo2", function(arg)
+        if arg ~= "" then config.settings.equipDo2 = arg; saveConfig(); sampAddChatMessage("[SEAL] /do 2 (надевание) изменено", -1) end
+    end)
+    sampRegisterChatCommand("seal_unme", function(arg)
+        if arg ~= "" then config.settings.unequipMe = arg; saveConfig(); sampAddChatMessage("[SEAL] /me (снятие) изменено", -1) end
+    end)
+    sampRegisterChatCommand("seal_undo", function(arg)
+        if arg ~= "" then config.settings.unequipDo = arg; saveConfig(); sampAddChatMessage("[SEAL] /do (снятие) изменено", -1) end
     end)
 
-    sampAddChatMessage(u8:decode("{2B87C8}[SEAL]{FFFFFF}: Скрипт формы загружен. Меню: /seal"), -1)
+    sampAddChatMessage("[SEAL]: Скрипт формы загружен.", -1)
+    sampAddChatMessage("[SEAL]: Настройка через команды: /seal_eqid, /seal_eqme, /seal_eqdo1 и т.д.", -1)
 
     while true do
         wait(0)
 
         -- Бинд на НАДЕВАНИЕ формы (X + 4)
         if isKeyDown(vkeys.VK_X) and isKeyJustPressed(vkeys.VK_4) then
-            lua_thread.create(function()
-                equipSEAL()
-            end)
+            lua_thread.create(function() equipSEAL() end)
         end
 
         -- Бинд на СНЯТИЕ формы (X + 3)
         if isKeyDown(vkeys.VK_X) and isKeyJustPressed(vkeys.VK_3) then
-            lua_thread.create(function()
-                unequipSEAL()
-            end)
+            lua_thread.create(function() unequipSEAL() end)
         end
     end
 end
