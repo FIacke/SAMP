@@ -48,26 +48,26 @@ local function updateConfig()
     inicfg.save(config, configFile)
 end
 
--- Функция надевания формы SEAL
+-- Функция надевания формы SEAL (ИСПРАВЛЕНО: добавлен u8:decode)
 local function equipSEAL()
     sampSendChat("/clist " .. config.settings.equipId)
     wait(800)
     sampSendChat(config.settings.hatCmd)
     wait(500)
-    sampSendChat("/me " .. config.settings.equipMe)
+    sampSendChat(u8:decode("/me " .. config.settings.equipMe))
     wait(500)
-    sampSendChat("/do " .. config.settings.equipDo1)
+    sampSendChat(u8:decode("/do " .. config.settings.equipDo1))
     wait(500)
-    sampSendChat("/do " .. config.settings.equipDo2)
+    sampSendChat(u8:decode("/do " .. config.settings.equipDo2))
 end
 
--- Функция снятия формы
+-- Функция снятия формы (ИСПРАВЛЕНО: добавлен u8:decode)
 local function unequipSEAL()
     sampSendChat("/clist " .. config.settings.unequipId)
     wait(800)
-    sampSendChat("/me " .. config.settings.unequipMe)
+    sampSendChat(u8:decode("/me " .. config.settings.unequipMe))
     wait(500)
-    sampSendChat("/do " .. config.settings.unequipDo)
+    sampSendChat(u8:decode("/do " .. config.settings.unequipDo))
 end
 
 -- Отрисовка меню
