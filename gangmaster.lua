@@ -135,7 +135,7 @@ function getweaponname(weapon)
     return names[weapon]
 end
 
-local tLastKeys = {} -- предыдущие хоткеи активации
+local tLastKeys = {} -- ГЇГ°ГҐГ¤Г»Г¤ГіГ№ГЁГҐ ГµГ®ГІГЄГҐГЁ Г ГЄГІГЁГўГ Г¶ГЁГЁ
 
 local DrugsKey = {
 	v = decodeJson(ini.settings.drugs_key)
@@ -188,7 +188,7 @@ function main()
     if imgui_main.buffers.multilineText.v == "" then
         imgui_main.buffers.multilineText.v = u8(table.concat(minicmds, "\n"))
     end
-    while sampGetGamestate() ~= 3 do return true end
+    while sampGetGamestate() ~= 3 do wait(100) end
     wait(1000)
     sampRegisterChatCommand("gmaster", function()
         imgui_main.menu.main_menu.v = not imgui_main.menu.main_menu.v
@@ -197,23 +197,23 @@ function main()
     sampRegisterChatCommand("gsell", function(arg)
         local id = tonumber(arg)
         if id == nil then
-            sampAddChatMessage(script_name.." {FFFFFF}Вы не указали ид!", 0x73b461)
+            sampAddChatMessage(script_name.." {FFFFFF}Г‚Г» Г­ГҐ ГіГЄГ Г§Г Г«ГЁ ГЁГ¤!", 0x73b461)
         end
         if type(id) ~= 'number' then
-            sampAddChatMessage(script_name.." {FFFFFF}Используйте: {dc4747}/gsell [id]", 0x73b461)
+            sampAddChatMessage(script_name.." {FFFFFF}Г€Г±ГЇГ®Г«ГјГ§ГіГ©ГІГҐ: {dc4747}/gsell [id]", 0x73b461)
         else
             if sampIsPlayerConnected(id) then
                 LFID = id
                 imgui_main.menu.fastact_menu.v = true
             else
-                sampAddChatMessage(script_name.." {FFFFFF}Игрок не найден!", 0x73b461)
+                sampAddChatMessage(script_name.." {FFFFFF}Г€ГЈГ°Г®ГЄ Г­ГҐ Г­Г Г©Г¤ГҐГ­!", 0x73b461)
             end
         end
     end)
     
 
     
-    sampAddChatMessage(script_name.." {FFFFFF}Загружен. {FFFFFF}Настройки: {dc4747}/gmaster {FFFFFF}Автор: {dc4747}"..script_author, 0x73b461)
+    sampAddChatMessage(script_name.." {FFFFFF}Г‡Г ГЈГ°ГіГ¦ГҐГ­. {FFFFFF}ГЌГ Г±ГІГ°Г®Г©ГЄГЁ: {dc4747}/gmaster {FFFFFF}ГЂГўГІГ®Г°: {dc4747}"..script_author, 0x73b461)
     lua_thread.create(timer_narko)
     bindUsedrugs = rkeys.registerHotKey(DrugsKey.v, true, function()
         if timernarko == 0 and not sampIsCursorActive() then
@@ -328,30 +328,30 @@ local last = 0
 local aheal = true
 
 function ev.onServerMessage(color, text)
-    if text:find("У вас %d/%d материалов с собой") and mats == nil then
-        mats = text:match("У вас (%d+)/%d материалов с собой")
+    if text:find("Г“ ГўГ Г± %d/%d Г¬Г ГІГҐГ°ГЁГ Г«Г®Гў Г± Г±Г®ГЎГ®Г©") and mats == nil then
+        mats = text:match("Г“ ГўГ Г± (%d+)/%d Г¬Г ГІГҐГ°ГЁГ Г«Г®Гў Г± Г±Г®ГЎГ®Г©")
         print(mats)
     end
-    if text:find("(( Остаток: %d+ грамм ))") then
+    if text:find("(( ГЋГ±ГІГ ГІГ®ГЄ: %d+ ГЈГ°Г Г¬Г¬ ))") then
         proverka = true
         cd = timernarko
     end
-    if getcd and text:find("Бонусы отключены") then
+    if getcd and text:find("ГЃГ®Г­ГіГ±Г» Г®ГІГЄГ«ГѕГ·ГҐГ­Г»") then
         timernarko = 60
-        sampAddChatMessage(script_name.." {FFFFFF}Таймер на нарко: {dc4747}"..timernarko.." {FFFFFF}секунд", 0x73b461)
+        sampAddChatMessage(script_name.." {FFFFFF}Г’Г Г©Г¬ГҐГ° Г­Г  Г­Г Г°ГЄГ®: {dc4747}"..timernarko.." {FFFFFF}Г±ГҐГЄГіГ­Г¤", 0x73b461)
         save()
         getcd = false
         return false
     end
     if ini.settings.ahelame then 
-        if text:find("Сейчас не получится. Вы используете намного больше аптечек, чем остальные") or text:find("Вы должны быть на своей базе или дома") or text:find("Вы не нуждаетесь в лечении") then
+        if text:find("Г‘ГҐГ©Г·Г Г± Г­ГҐ ГЇГ®Г«ГіГ·ГЁГІГ±Гї. Г‚Г» ГЁГ±ГЇГ®Г«ГјГ§ГіГҐГІГҐ Г­Г Г¬Г­Г®ГЈГ® ГЎГ®Г«ГјГёГҐ Г ГЇГІГҐГ·ГҐГЄ, Г·ГҐГ¬ Г®Г±ГІГ Г«ГјГ­Г»ГҐ") or text:find("Г‚Г» Г¤Г®Г«Г¦Г­Г» ГЎГ»ГІГј Г­Г  Г±ГўГ®ГҐГ© ГЎГ Г§ГҐ ГЁГ«ГЁ Г¤Г®Г¬Г ") or text:find("Г‚Г» Г­ГҐ Г­ГіГ¦Г¤Г ГҐГІГҐГ±Гј Гў Г«ГҐГ·ГҐГ­ГЁГЁ") then
             aheal = false
         end
     end
-    if getcd and text:find("Действует до:") then
+    if getcd and text:find("Г„ГҐГ©Г±ГІГўГіГҐГІ Г¤Г®:") then
         return false
     end
-    if text:find(".+%sоткрыл%(а%)%sсклад%sс%sоружием") and ini.settings.automati and last == 0 then
+    if text:find(".+%sГ®ГІГЄГ°Г»Г«%(Г %)%sГ±ГЄГ«Г Г¤%sГ±%sГ®Г°ГіГ¦ГЁГҐГ¬") and ini.settings.automati and last == 0 then
         last = 1
         lua_thread.create(function()
             wait(100)
@@ -364,15 +364,15 @@ end
 
 function ev.onShowDialog(id, style, title, button1, button2, text)
     if getcd then
-        if title:find("Бонусы") then
+        if title:find("ГЃГ®Г­ГіГ±Г»") then
             for line in text:gmatch("[^\n]+") do
-                if line:find("Таймер на Нарко") then
-                    bonus = line:match("Таймер на Нарко	(.+)")
+                if line:find("Г’Г Г©Г¬ГҐГ° Г­Г  ГЌГ Г°ГЄГ®") then
+                    bonus = line:match("Г’Г Г©Г¬ГҐГ° Г­Г  ГЌГ Г°ГЄГ®	(.+)")
                     timernarko = math.floor(bonus * 60 )
                     if timernarko < 22 then
                         timernarko = 30
                     end
-                    sampAddChatMessage(script_name.." {FFFFFF}Таймер на нарко: {dc4747}"..timernarko.." {FFFFFF}секунд", 0x73b461)
+                    sampAddChatMessage(script_name.." {FFFFFF}Г’Г Г©Г¬ГҐГ° Г­Г  Г­Г Г°ГЄГ®: {dc4747}"..timernarko.." {FFFFFF}Г±ГҐГЄГіГ­Г¤", 0x73b461)
                     getcd = false
                 end
             end
@@ -420,24 +420,24 @@ function imgui.OnDrawFrame()
         imgui.SetNextWindowSize(imgui.ImVec2(450, 500), imgui.Cond.FirstUseEver)
 		imgui.SetNextWindowPos(imgui.ImVec2((sw / 2), sh / 2), imgui.Cond.FirstUseEver, imgui.ImVec2(0.5, 0.5))
 		imgui.Begin(u8"Gang Master", imgui_main.menu.main_menu, imgui.WindowFlags.NoCollapse + imgui.WindowFlags.AlwaysAutoResize)
-            imgui.Text(u8"Клавиша для использования нарко:")
+            imgui.Text(u8"ГЉГ«Г ГўГЁГёГ  Г¤Г«Гї ГЁГ±ГЇГ®Г«ГјГ§Г®ГўГ Г­ГЁГї Г­Г Г°ГЄГ®:")
             imgui.SameLine()
             if imgui.HotKey(u8"##drugkey", DrugsKey, tLastKeys, 50) then
                 rkeys.changeHotKey(bindUsedrugs, DrugsKey.v)
-                sampAddChatMessage(script_name.." {FFFFFF}Старое значение: {dc4747}" .. table.concat(rkeys.getKeysName(tLastKeys.v), " + ") .. "{ffffff} | Новое: {dc4747}" .. table.concat(rkeys.getKeysName(DrugsKey.v), " + "), 0x73b461)
+                sampAddChatMessage(script_name.." {FFFFFF}Г‘ГІГ Г°Г®ГҐ Г§Г­Г Г·ГҐГ­ГЁГҐ: {dc4747}" .. table.concat(rkeys.getKeysName(tLastKeys.v), " + ") .. "{ffffff} | ГЌГ®ГўГ®ГҐ: {dc4747}" .. table.concat(rkeys.getKeysName(DrugsKey.v), " + "), 0x73b461)
                 ini.settings.drugs_key = encodeJson(DrugsKey.v)
                 save()
             end
-            if imgui.Checkbox(u8"DisaFlyingComponent (детали транспорта при поломке пропадают моментально)", imgui_main.checkboxes.disaFlyingComponent) then
+            if imgui.Checkbox(u8"DisaFlyingComponent (Г¤ГҐГІГ Г«ГЁ ГІГ°Г Г­Г±ГЇГ®Г°ГІГ  ГЇГ°ГЁ ГЇГ®Г«Г®Г¬ГЄГҐ ГЇГ°Г®ГЇГ Г¤Г ГѕГІ Г¬Г®Г¬ГҐГ­ГІГ Г«ГјГ­Г®)", imgui_main.checkboxes.disaFlyingComponent) then
                 ini.settings.disaFlyingComponent = not ini.settings.disaFlyingComponent
                 save()
                 gotofunc("DisaFlyingComponent")
             end
-            if imgui.Checkbox(u8"Fixcar при спавне", imgui_main.checkboxes.fixcarspawn) then
+            if imgui.Checkbox(u8"Fixcar ГЇГ°ГЁ Г±ГЇГ ГўГ­ГҐ", imgui_main.checkboxes.fixcarspawn) then
                 ini.settings.fixcarspawn = not ini.settings.fixcarspawn
                 save()
             end
-            if imgui.Checkbox(u8"Авто /healme до 100 хп при спавне", imgui_main.checkboxes.ahelame) then
+            if imgui.Checkbox(u8"ГЂГўГІГ® /healme Г¤Г® 100 ГµГЇ ГЇГ°ГЁ Г±ГЇГ ГўГ­ГҐ", imgui_main.checkboxes.ahelame) then
                 ini.settings.ahelame = not ini.settings.ahelame
                 save()
             end
@@ -448,14 +448,14 @@ function imgui.OnDrawFrame()
             end
          
             if ini.settings.doublejump then
-                imgui.Text(u8"Клавиша для Double Jump:")
+                imgui.Text(u8"ГЉГ«Г ГўГЁГёГ  Г¤Г«Гї Double Jump:")
                 imgui.SameLine()
                 if imgui.HotKey(u8"##djm44p", DoubleJump, tLastKeys, 50) then
-                    sampAddChatMessage(script_name.." {FFFFFF}Старое значение: {dc4747}" .. table.concat(rkeys.getKeysName(tLastKeys.v), " + ") .. "{ffffff} | Новое: {dc4747}" .. table.concat(rkeys.getKeysName(DoubleJump.v), " + "), 0x73b461)
+                    sampAddChatMessage(script_name.." {FFFFFF}Г‘ГІГ Г°Г®ГҐ Г§Г­Г Г·ГҐГ­ГЁГҐ: {dc4747}" .. table.concat(rkeys.getKeysName(tLastKeys.v), " + ") .. "{ffffff} | ГЌГ®ГўГ®ГҐ: {dc4747}" .. table.concat(rkeys.getKeysName(DoubleJump.v), " + "), 0x73b461)
                     ini.settings.doublejump_key = encodeJson(DoubleJump.v)
                     save()
                 end
-                imgui.Text(u8"Клавиша которую вы жмёте чтобы прыгать:")
+                imgui.Text(u8"ГЉГ«Г ГўГЁГёГ  ГЄГ®ГІГ®Г°ГіГѕ ГўГ» Г¦Г¬ВёГІГҐ Г·ГІГ®ГЎГ» ГЇГ°Г»ГЈГ ГІГј:")
                 imgui.SameLine()
                 imgui.PushItemWidth(90)
                 if imgui.InputInt(u8"##djmpprk", imgui_main.buffers.doublejump_keyPrig) then
@@ -464,87 +464,87 @@ function imgui.OnDrawFrame()
                 end
                 imgui.PopItemWidth()
             end
-            imgui.Text(u8"Клавиша для докрафта патронов для оружия в руках:")
+            imgui.Text(u8"ГЉГ«Г ГўГЁГёГ  Г¤Г«Гї Г¤Г®ГЄГ°Г ГґГІГ  ГЇГ ГІГ°Г®Г­Г®Гў Г¤Г«Гї Г®Г°ГіГ¦ГЁГї Гў Г°ГіГЄГ Гµ:")
             imgui.SameLine()
             if imgui.HotKey(u8"##docraftkey", DocraftGun, tLastKeys, 50) then
-                sampAddChatMessage(script_name.." {FFFFFF}Старое значение: {dc4747}" .. table.concat(rkeys.getKeysName(tLastKeys.v), " + ") .. "{ffffff} | Новое: {dc4747}" .. table.concat(rkeys.getKeysName(DocraftGun.v), " + "), 0x73b461)
+                sampAddChatMessage(script_name.." {FFFFFF}Г‘ГІГ Г°Г®ГҐ Г§Г­Г Г·ГҐГ­ГЁГҐ: {dc4747}" .. table.concat(rkeys.getKeysName(tLastKeys.v), " + ") .. "{ffffff} | ГЌГ®ГўГ®ГҐ: {dc4747}" .. table.concat(rkeys.getKeysName(DocraftGun.v), " + "), 0x73b461)
                 ini.settings.docraft_key = encodeJson(DocraftGun.v)
                 save()
             end
-            imgui.Text(u8"Количество патрон для докрафта:")
+            imgui.Text(u8"ГЉГ®Г«ГЁГ·ГҐГ±ГІГўГ® ГЇГ ГІГ°Г®Г­ Г¤Г«Гї Г¤Г®ГЄГ°Г ГґГІГ :")
             imgui.SameLine()
             imgui.PushItemWidth(90)
             if imgui.InputInt(u8"##docraftpatr", imgui_main.buffers.docraftpatrons) then
                 ini.settings.docraftpatrons = imgui_main.buffers.docraftpatrons.v
                 save()
             end
-            imgui.Text(u8"Цена за продажу ключей игроку через быстрое действие:")
+            imgui.Text(u8"Г–ГҐГ­Г  Г§Г  ГЇГ°Г®Г¤Г Г¦Гі ГЄГ«ГѕГ·ГҐГ© ГЁГЈГ°Г®ГЄГі Г·ГҐГ°ГҐГ§ ГЎГ»Г±ГІГ°Г®ГҐ Г¤ГҐГ©Г±ГІГўГЁГҐ:")
             imgui.SameLine()
             if imgui.InputInt(u8"##cenakey", imgui_main.buffers.cenakey) then
                 ini.settings.cenakey = imgui_main.buffers.cenakey.v
                 save()
             end
             imgui.PopItemWidth()
-            if imgui.Checkbox(u8"Сбив анимации", imgui_main.checkboxes.sbiv) then
+            if imgui.Checkbox(u8"Г‘ГЎГЁГў Г Г­ГЁГ¬Г Г¶ГЁГЁ", imgui_main.checkboxes.sbiv) then
                 ini.settings.sbiv = not ini.settings.sbiv
                 save()
             end
             
             if imgui_main.checkboxes.sbiv.v then
-                imgui.Text(u8"Клавиша для сбива:")
+                imgui.Text(u8"ГЉГ«Г ГўГЁГёГ  Г¤Г«Гї Г±ГЎГЁГўГ :")
                 imgui.SameLine()
                 if imgui.HotKey(u8"##sbivkey", SbivKey, tLastKeys, 50) then
-                    sampAddChatMessage(script_name.." {FFFFFF}Старое значение: {dc4747}" .. table.concat(rkeys.getKeysName(tLastKeys.v), " + ") .. "{ffffff} | Новое: {dc4747}" .. table.concat(rkeys.getKeysName(SbivKey.v), " + "), 0x73b461)
+                    sampAddChatMessage(script_name.." {FFFFFF}Г‘ГІГ Г°Г®ГҐ Г§Г­Г Г·ГҐГ­ГЁГҐ: {dc4747}" .. table.concat(rkeys.getKeysName(tLastKeys.v), " + ") .. "{ffffff} | ГЌГ®ГўГ®ГҐ: {dc4747}" .. table.concat(rkeys.getKeysName(SbivKey.v), " + "), 0x73b461)
                     ini.settings.sbiv_key = encodeJson(SbivKey.v)
                     save()
                 end
             end
-            if imgui.Checkbox(u8"АвтоКапт на клавишу", imgui_main.checkboxes.acapt) then
+            if imgui.Checkbox(u8"ГЂГўГІГ®ГЉГ ГЇГІ Г­Г  ГЄГ«Г ГўГЁГёГі", imgui_main.checkboxes.acapt) then
                 ini.settings.acapt = not ini.settings.acapt
                 save()
             end
             if imgui_main.checkboxes.acapt.v then
-                imgui.Text(u8"Клавиша для запуска/остановки автокапта:")
+                imgui.Text(u8"ГЉГ«Г ГўГЁГёГ  Г¤Г«Гї Г§Г ГЇГіГ±ГЄГ /Г®Г±ГІГ Г­Г®ГўГЄГЁ Г ГўГІГ®ГЄГ ГЇГІГ :")
                 imgui.SameLine()
                 if imgui.HotKey(u8"##acaptkey", aCapt, tLastKeys, 50) then
-                    sampAddChatMessage(script_name.." {FFFFFF}Старое значение: {dc4747}" .. table.concat(rkeys.getKeysName(tLastKeys.v), " + ") .. "{ffffff} | Новое: {dc4747}" .. table.concat(rkeys.getKeysName(aCapt.v), " + "), 0x73b461)
+                    sampAddChatMessage(script_name.." {FFFFFF}Г‘ГІГ Г°Г®ГҐ Г§Г­Г Г·ГҐГ­ГЁГҐ: {dc4747}" .. table.concat(rkeys.getKeysName(tLastKeys.v), " + ") .. "{ffffff} | ГЌГ®ГўГ®ГҐ: {dc4747}" .. table.concat(rkeys.getKeysName(aCapt.v), " + "), 0x73b461)
                     ini.settings.acpat_key = encodeJson(aCapt.v)
                     save()
                 end
                 imgui.PushItemWidth(90)
-                imgui.Text(u8"Задержка для автокапта:")
+                imgui.Text(u8"Г‡Г Г¤ГҐГ°Г¦ГЄГ  Г¤Г«Гї Г ГўГІГ®ГЄГ ГЇГІГ :")
                 if imgui.InputInt(u8"##acaptcd", imgui_main.buffers.acaptcd) then
                     ini.settings.acaptcd = imgui_main.buffers.acaptcd.v
                     save()
                 end
                 imgui.PopItemWidth()
             end
-            if imgui.Checkbox(u8"Автоматическое взятие материалов при открытии склада", imgui_main.checkboxes.automati) then
+            if imgui.Checkbox(u8"ГЂГўГІГ®Г¬Г ГІГЁГ·ГҐГ±ГЄГ®ГҐ ГўГ§ГїГІГЁГҐ Г¬Г ГІГҐГ°ГЁГ Г«Г®Гў ГЇГ°ГЁ Г®ГІГЄГ°Г»ГІГЁГЁ Г±ГЄГ«Г Г¤Г ", imgui_main.checkboxes.automati) then
                 ini.settings.automati = imgui_main.checkboxes.automati.v
                 save()
             end
-            if imgui.Checkbox(u8"Автоматическое удаление биты", imgui_main.checkboxes.delbeat) then
+            if imgui.Checkbox(u8"ГЂГўГІГ®Г¬Г ГІГЁГ·ГҐГ±ГЄГ®ГҐ ГіГ¤Г Г«ГҐГ­ГЁГҐ ГЎГЁГІГ»", imgui_main.checkboxes.delbeat) then
                 ini.settings.delbeat = imgui_main.checkboxes.delbeat.v
                 save()
             end
-            imgui.Text(u8"Быстрое действие с игроком: /gsell id")
-            imgui.Text(u8"Клавиша для быстрого действия с игроком:")
+            imgui.Text(u8"ГЃГ»Г±ГІГ°Г®ГҐ Г¤ГҐГ©Г±ГІГўГЁГҐ Г± ГЁГЈГ°Г®ГЄГ®Г¬: /gsell id")
+            imgui.Text(u8"ГЉГ«Г ГўГЁГёГ  Г¤Г«Гї ГЎГ»Г±ГІГ°Г®ГЈГ® Г¤ГҐГ©Г±ГІГўГЁГї Г± ГЁГЈГ°Г®ГЄГ®Г¬:")
             imgui.SameLine()
-            imgui.Text(u8"ПКМ +")
+            imgui.Text(u8"ГЏГЉГЊ +")
             imgui.SameLine()
             if imgui.HotKey(u8"##fastactionforplayers", FastAction, tLastKeys, 50) then
-                sampAddChatMessage(script_name.." {FFFFFF}Старое значение: {dc4747}" .. table.concat(rkeys.getKeysName(tLastKeys.v), " + ") .. "{ffffff} | Новое: {dc4747}" .. table.concat(rkeys.getKeysName(FastAction.v), " + "), 0x73b461)
+                sampAddChatMessage(script_name.." {FFFFFF}Г‘ГІГ Г°Г®ГҐ Г§Г­Г Г·ГҐГ­ГЁГҐ: {dc4747}" .. table.concat(rkeys.getKeysName(tLastKeys.v), " + ") .. "{ffffff} | ГЌГ®ГўГ®ГҐ: {dc4747}" .. table.concat(rkeys.getKeysName(FastAction.v), " + "), 0x73b461)
                 ini.settings.fastaction_key = encodeJson(FastAction.v)
                 save()
             end
             imgui.Separator()
-            imgui.Text(u8"Сократитель команд:\nПример использования: /оригинальная команда = /сокращенная команда")
+            imgui.Text(u8"Г‘Г®ГЄГ°Г ГІГЁГІГҐГ«Гј ГЄГ®Г¬Г Г­Г¤:\nГЏГ°ГЁГ¬ГҐГ° ГЁГ±ГЇГ®Г«ГјГ§Г®ГўГ Г­ГЁГї: /Г®Г°ГЁГЈГЁГ­Г Г«ГјГ­Г Гї ГЄГ®Г¬Г Г­Г¤Г  = /Г±Г®ГЄГ°Г Г№ГҐГ­Г­Г Гї ГЄГ®Г¬Г Г­Г¤Г ")
             imgui.InputTextMultiline("##multilineText", imgui_main.buffers.multilineText, imgui.ImVec2(-1, 200))
-            if imgui.Button(u8"Сохранить", imgui.ImVec2(200,20)) and imgui_main.buffers.multilineText.v ~= " " and imgui_main.buffers.multilineText.v ~= "" and imgui_main.buffers.multilineText.v ~= nil then
+            if imgui.Button(u8"Г‘Г®ГµГ°Г Г­ГЁГІГј", imgui.ImVec2(200,20)) and imgui_main.buffers.multilineText.v ~= " " and imgui_main.buffers.multilineText.v ~= "" and imgui_main.buffers.multilineText.v ~= nil then
                 if doesFileExist("moonloader\\gangmasterminicommands.txt") then
                     local path = getGameDirectory().."//moonloader//gangmasterminicommands.txt"
                     os.remove(path)
-                    file = io.open("moonloader\\gangmasterminicommands.txt", "a+") -- открываем файл
+                    file = io.open("moonloader\\gangmasterminicommands.txt", "a+") -- Г®ГІГЄГ°Г»ГўГ ГҐГ¬ ГґГ Г©Г«
                     file:write(string.format(""..u8:decode ( imgui_main.buffers.multilineText.v ).."\n") )
                     file:close()
                     minicmds = {}
@@ -556,33 +556,33 @@ function imgui.OnDrawFrame()
     if imgui_main.menu.fastact_menu.v then
         imgui.SetNextWindowSize(imgui.ImVec2(300, 100), imgui.Cond.FirstUseEver)
 		imgui.SetNextWindowPos(imgui.ImVec2((sw / 2), sh / 2), imgui.Cond.FirstUseEver, imgui.ImVec2(0.5, 0.5))
-		imgui.Begin(u8"Gang Master [Быстрое действие]", imgui_main.menu.fastact_menu, imgui.WindowFlags.NoCollapse + imgui.WindowFlags.AlwaysAutoResize)
+		imgui.Begin(u8"Gang Master [ГЃГ»Г±ГІГ°Г®ГҐ Г¤ГҐГ©Г±ГІГўГЁГҐ]", imgui_main.menu.fastact_menu, imgui.WindowFlags.NoCollapse + imgui.WindowFlags.AlwaysAutoResize)
             if sampIsPlayerConnected(LFID) then
-                imgui.Text(u8"Взаимодействие с: "..sampGetPlayerNickname(LFID).." ("..LFID..")")
-                if imgui.Button(u8"Продать оружие", imgui.ImVec2(200, 20)) then
+                imgui.Text(u8"Г‚Г§Г ГЁГ¬Г®Г¤ГҐГ©Г±ГІГўГЁГҐ Г±: "..sampGetPlayerNickname(LFID).." ("..LFID..")")
+                if imgui.Button(u8"ГЏГ°Г®Г¤Г ГІГј Г®Г°ГіГ¦ГЁГҐ", imgui.ImVec2(200, 20)) then
                     imgui_main.menu.peredachagana_menu.v = true
                     imgui_main.menu.fastact_menu.v = false
                 end
-                if imgui.Button(u8"Продать наркотики", imgui.ImVec2(200, 20)) then
+                if imgui.Button(u8"ГЏГ°Г®Г¤Г ГІГј Г­Г Г°ГЄГ®ГІГЁГЄГЁ", imgui.ImVec2(200, 20)) then
                     imgui_main.menu.peredachanarko_menu.v = true
                     imgui_main.menu.fastact_menu.v = false
                 end
-                if imgui.Button(u8"Принять в банду", imgui.ImVec2(200, 20)) then
+                if imgui.Button(u8"ГЏГ°ГЁГ­ГїГІГј Гў ГЎГ Г­Г¤Гі", imgui.ImVec2(200, 20)) then
                     sampSendChat("/invite "..LFID)
                 end
-                if imgui.Button(u8"Принять в SQUAD", imgui.ImVec2(200, 20)) then
+                if imgui.Button(u8"ГЏГ°ГЁГ­ГїГІГј Гў SQUAD", imgui.ImVec2(200, 20)) then
                     sampSendChat("/squad invite "..LFID)
                 end
-                if imgui.Button(u8"Выдать ранг в банде", imgui.ImVec2(200, 20)) then
+                if imgui.Button(u8"Г‚Г»Г¤Г ГІГј Г°Г Г­ГЈ Гў ГЎГ Г­Г¤ГҐ", imgui.ImVec2(200, 20)) then
                     sampSendChat("/invite "..LFID)
                     sampSetChatInputText("/giverank "..LFID.." ")
                     sampSetChatInputEnabled(true)
                 end
-                if imgui.Button(u8"Дать ключи от камеры", imgui.ImVec2(200, 20)) then
+                if imgui.Button(u8"Г„Г ГІГј ГЄГ«ГѕГ·ГЁ Г®ГІ ГЄГ Г¬ГҐГ°Г»", imgui.ImVec2(200, 20)) then
                     sampSendChat("/sellekey "..LFID.." "..ini.settings.cenakey)
                 end
             else
-                imgui.Text(u8"Игрок для взаимодействия не найден!")
+                imgui.Text(u8"Г€ГЈГ°Г®ГЄ Г¤Г«Гї ГўГ§Г ГЁГ¬Г®Г¤ГҐГ©Г±ГІГўГЁГї Г­ГҐ Г­Г Г©Г¤ГҐГ­!")
             end
             
 		imgui.End()
@@ -590,36 +590,36 @@ function imgui.OnDrawFrame()
     if imgui_main.menu.peredachagana_menu.v then
         imgui.SetNextWindowSize(imgui.ImVec2(300, 160), imgui.Cond.FirstUseEver)
 		imgui.SetNextWindowPos(imgui.ImVec2((sw / 2), sh / 2), imgui.Cond.FirstUseEver, imgui.ImVec2(0.5, 0.5))
-		imgui.Begin(u8"Gang Master [Продажа оружия]", imgui_main.menu.peredachagana_menu, imgui.WindowFlags.NoCollapse)
+		imgui.Begin(u8"Gang Master [ГЏГ°Г®Г¤Г Г¦Г  Г®Г°ГіГ¦ГЁГї]", imgui_main.menu.peredachagana_menu, imgui.WindowFlags.NoCollapse)
             if sampIsPlayerConnected(LFID) then
-                imgui.Text(u8"Продажа игроку: "..sampGetPlayerNickname(LFID).." ("..LFID..")")
+                imgui.Text(u8"ГЏГ°Г®Г¤Г Г¦Г  ГЁГЈГ°Г®ГЄГі: "..sampGetPlayerNickname(LFID).." ("..LFID..")")
             
-                imgui.Text(u8"Оружие:")
+                imgui.Text(u8"ГЋГ°ГіГ¦ГЁГҐ:")
                 imgui.SameLine()
                 imgui.PushItemWidth(130)
                 if imgui.Combo(u8"##gun", imgui_main.int.gun, weapons, #weapons) then
                     ini.settings.gun = imgui_main.int.gun.v
                     save()
                 end
-                imgui.Text(u8"Количество патрон:")
+                imgui.Text(u8"ГЉГ®Г«ГЁГ·ГҐГ±ГІГўГ® ГЇГ ГІГ°Г®Г­:")
                 imgui.SameLine()
                 imgui.PushItemWidth(90)
                 if imgui.InputInt(u8"##patr", imgui_main.buffers.gun) then
                     ini.settings.buffgun = imgui_main.buffers.gun.v
                     save()
                 end
-                imgui.Text(u8"Цена:")
+                imgui.Text(u8"Г–ГҐГ­Г :")
                 imgui.SameLine()
                 if imgui.InputInt(u8"##cena", imgui_main.buffers.cenagun) then
                     ini.settings.cenagun = imgui_main.buffers.cenagun.v
                     save()
                 end
-                if imgui.Button(u8"Продать", imgui.ImVec2(200, 20)) then
+                if imgui.Button(u8"ГЏГ°Г®Г¤Г ГІГј", imgui.ImVec2(200, 20)) then
                     imgui_main.menu.peredachagana_menu.v = false
                     sampSendChat("/sellgun "..weapons[tonumber(imgui_main.int.gun.v+1)].." "..ini.settings.buffgun.." "..ini.settings.cenagun.." "..LFID)
                 end
             else
-                imgui.Text(u8"Игрок для взаимодействия не найден!")
+                imgui.Text(u8"Г€ГЈГ°Г®ГЄ Г¤Г«Гї ГўГ§Г ГЁГ¬Г®Г¤ГҐГ©Г±ГІГўГЁГї Г­ГҐ Г­Г Г©Г¤ГҐГ­!")
             end
 		imgui.End()
     end
@@ -627,28 +627,28 @@ function imgui.OnDrawFrame()
     if imgui_main.menu.peredachanarko_menu.v then
         imgui.SetNextWindowSize(imgui.ImVec2(300, 130), imgui.Cond.FirstUseEver)
 		imgui.SetNextWindowPos(imgui.ImVec2((sw / 2), sh / 2), imgui.Cond.FirstUseEver, imgui.ImVec2(0.5, 0.5))
-		imgui.Begin(u8"Gang Master [Продажа наркотиков]", imgui_main.menu.peredachanarko_menu, imgui.WindowFlags.NoCollapse)
+		imgui.Begin(u8"Gang Master [ГЏГ°Г®Г¤Г Г¦Г  Г­Г Г°ГЄГ®ГІГЁГЄГ®Гў]", imgui_main.menu.peredachanarko_menu, imgui.WindowFlags.NoCollapse)
             if sampIsPlayerConnected(LFID) then
-                imgui.Text(u8"Продажа игроку: "..sampGetPlayerNickname(LFID).." ("..LFID..")")
-                imgui.Text(u8"Количество грамм:")
+                imgui.Text(u8"ГЏГ°Г®Г¤Г Г¦Г  ГЁГЈГ°Г®ГЄГі: "..sampGetPlayerNickname(LFID).." ("..LFID..")")
+                imgui.Text(u8"ГЉГ®Г«ГЁГ·ГҐГ±ГІГўГ® ГЈГ°Г Г¬Г¬:")
                 imgui.SameLine()
                 imgui.PushItemWidth(90)
                 if imgui.InputInt(u8"##ngramm", imgui_main.buffers.narko) then
                     ini.settings.buffnarko = imgui_main.buffers.narko.v
                     save()
                 end
-                imgui.Text(u8"Цена:")
+                imgui.Text(u8"Г–ГҐГ­Г :")
                 imgui.SameLine()
                 if imgui.InputInt(u8"##cenanarko", imgui_main.buffers.cenanarko) then
                     ini.settings.cenanarko = imgui_main.buffers.cenanarko.v
                     save()
                 end
-                if imgui.Button(u8"Продать", imgui.ImVec2(200, 20)) then
+                if imgui.Button(u8"ГЏГ°Г®Г¤Г ГІГј", imgui.ImVec2(200, 20)) then
                     imgui_main.menu.peredachanarko_menu.v = false
                     sampSendChat("/selldrugs "..LFID.." "..ini.settings.buffnarko.." "..ini.settings.cenanarko)
                 end
             else
-                imgui.Text(u8"Игрок для взаимодействия не найден!")
+                imgui.Text(u8"Г€ГЈГ°Г®ГЄ Г¤Г«Гї ГўГ§Г ГЁГ¬Г®Г¤ГҐГ©Г±ГІГўГЁГї Г­ГҐ Г­Г Г©Г¤ГҐГ­!")
             end
 		imgui.End()
     end
@@ -690,13 +690,13 @@ function onWindowMessage(msg, wparam, lparam)
 end
 
 function cfile()
-    local file = io.open("moonloader\\gangmasterminicommands.txt", "a+") -- открываем и создаем файл
-    file:close() -- закрываем, это если не будет файла то он создатся. Да да это гениально!
-    local file = io.open("moonloader\\gangmasterminicommands.txt", "a+") -- открываем
-    for line in file:lines() do -- читаем его построчно
-        minicmds[#minicmds+1] = line -- записываем строки в массив
+    local file = io.open("moonloader\\gangmasterminicommands.txt", "a+") -- Г®ГІГЄГ°Г»ГўГ ГҐГ¬ ГЁ Г±Г®Г§Г¤Г ГҐГ¬ ГґГ Г©Г«
+    file:close() -- Г§Г ГЄГ°Г»ГўГ ГҐГ¬, ГЅГІГ® ГҐГ±Г«ГЁ Г­ГҐ ГЎГіГ¤ГҐГІ ГґГ Г©Г«Г  ГІГ® Г®Г­ Г±Г®Г§Г¤Г ГІГ±Гї. Г„Г  Г¤Г  ГЅГІГ® ГЈГҐГ­ГЁГ Г«ГјГ­Г®!
+    local file = io.open("moonloader\\gangmasterminicommands.txt", "a+") -- Г®ГІГЄГ°Г»ГўГ ГҐГ¬
+    for line in file:lines() do -- Г·ГЁГІГ ГҐГ¬ ГҐГЈГ® ГЇГ®Г±ГІГ°Г®Г·Г­Г®
+        minicmds[#minicmds+1] = line -- Г§Г ГЇГЁГ±Г»ГўГ ГҐГ¬ Г±ГІГ°Г®ГЄГЁ Гў Г¬Г Г±Г±ГЁГў
     end
-    file:close() -- закрываем файл
+    file:close() -- Г§Г ГЄГ°Г»ГўГ ГҐГ¬ ГґГ Г©Г«
     --
 end
 
@@ -798,4 +798,3 @@ function purple_style()
 end
 purple_style()
 
-require("mimgui")
